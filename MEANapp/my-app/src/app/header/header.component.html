@@ -1,0 +1,12 @@
+<mat-toolbar>
+  <button mat-button [matMenuTriggerFor]='appMenu' class='menu-button'>Menu</button>
+  <span class='filler'></span>
+  <button mat-button class='logout-button' (click)='logout()'>Logout</button>
+</mat-toolbar>
+
+<mat-menu #appMenu='matMenu'>
+  <button mat-menu-item>Option 1</button>
+  <button mat-menu-item>Option 2</button>
+</mat-menu>
+
+

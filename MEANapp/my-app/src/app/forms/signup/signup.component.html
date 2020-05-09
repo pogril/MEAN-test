@@ -1,0 +1,49 @@
+<div class='card-container'>
+  <mat-card style="text-align: center;">
+    <mat-card-title>{{ confirmPassword ? 'Sign Up' : 'Log In' }} </mat-card-title>
+    <mat-card-content>
+      <form (ngSubmit)='handleForm()' #form='ngForm'>
+        <mat-form-field>
+          <input matInput
+            [(ngModel)]='username'
+            required
+            email
+            name='email'>
+            <mat-error>
+              Please enter a valid e-mail address.
+            </mat-error>
+            <mat-error *ngIf='this.emailTaken'>
+              A user with this email address already exists!
+            </mat-error>
+        </mat-form-field>
+        <br/>
+        <mat-form-field>
+          <input matInput
+            [(ngModel)]='password'
+            required
+            type='password'
+            name='password'>
+        </mat-form-field>
+        <br *ngIf='this.confirmPassword == true'/>
+        <mat-form-field *ngIf='this.confirmPassword == true'>
+          <input matInput
+          [(ngModel)]='confirmedPassword'
+          required
+          type='password'
+          name='confirm-password'>
+          <mat-error *ngIf='this.password != this.confirmedPassword'>
+            Passwords do not match!
+          </mat-error>
+        </mat-form-field>
+        <br/>
+        <button mat-raised-button color='primary' class='left-button' [disabled]='!form.valid'>
+          {{ confirmPassword ? 'Sign Up' : 'Log In' }}</button>
+        <br/>
+        <button mat-raised-button color='primary' class='right-button' type='button'
+        (click)='this.confirmPassword = !this.confirmPassword'>
+        Switch to {{ confirmPassword ? 'Log in' : 'Sign up'}}</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  <br/>
+</div>

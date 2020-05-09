@@ -1,0 +1,9 @@
+<mat-card>
+  <div mat-card-avatar [ngStyle]="{'background-image': 'url(' + image + ')'}"></div>
+  <mat-card-header>
+    <mat-card-title>{{author}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div [innerHTML]='content'></div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,17 @@
+<app-header></app-header>
+<mat-sidenav-container class='tgt2'>
+  <mat-sidenav #sidenav mode='side' class='tgt' opened>
+    <button mat-menu-item (click)='loadFeed()'>My Feed</button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)='newChannel()' (contextmenu)='getOptions()'> +  New Channel</button>
+    <mat-divider></mat-divider>
+    <br/>
+    <button mat-menu-item *ngFor='let channel of channels' (click)='loadChannel(channel.id)'>{{ '#'+channel.name }}</button>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet (activate)='getRef($event)'></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

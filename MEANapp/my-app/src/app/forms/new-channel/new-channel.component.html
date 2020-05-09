@@ -1,0 +1,18 @@
+<div class='card-container'>
+  <mat-card>
+    <mat-card-title>New Channel</mat-card-title>
+    <mat-card-content>
+      <form (ngSubmit)='createNew()' #newForm='ngForm'>
+        <mat-form-field>
+          <input
+          matInput
+          [(ngModel)]='name'
+          required
+          name='channel-name'>
+        </mat-form-field>
+        <button mat-raised-button color='primary' [disabled]='!newForm.valid'>Create Channel</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+</div>

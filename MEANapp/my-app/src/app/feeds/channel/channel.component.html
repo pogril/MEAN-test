@@ -1,0 +1,29 @@
+<div #msgContainer class='messages-container'>
+  <div *ngIf='loaded'>
+    <app-message *ngFor='let message of messages'
+    [content]='message.content'
+    [author]='message.author'
+    >
+  </app-message>
+  </div>
+</div>
+<mat-divider></mat-divider>
+<div class='input-area'>
+  <form (ngSubmit)='onSubmit(form)' #form='ngForm'>
+    <mat-form-field class='text-box'>
+      <textarea
+      matInput
+      ngModel
+      type='text'
+      name='textInput'
+      required
+      cdkTextareaAutosize
+      cdkAutosizeMinRows='4'
+      cdkAutosizeMaxRows='4'>
+    </textarea>
+      <div class='button-container'>
+        <button mat-raised-button [disabled]='!form.valid' color='primary'>Send</button>
+      </div>
+    </mat-form-field>
+  </form>
+</div>
