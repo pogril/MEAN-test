@@ -1,8 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LayoutModule } from '@angular/cdk/layout';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
@@ -13,6 +14,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatIconModule } from '@angular/material/icon'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,6 +28,8 @@ import { NewChannelFormComponent } from './forms/new-channel/new-channel.compone
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { AuthInterceptor } from './services/http-interceptors/auth-interceptor';
+import { SetupComponent } from './forms/user-setup/setup.component';
+import { InboxComponent } from './feeds/inbox/inbox.component'
 
 @NgModule({
   declarations: [
@@ -36,11 +41,14 @@ import { AuthInterceptor } from './services/http-interceptors/auth-interceptor';
     ChannelComponent,
     NewChannelFormComponent,
     HomeComponent,
-    LoginComponent
+    LoginComponent,
+    SetupComponent,
+    InboxComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     MatToolbarModule,
     MatMenuModule,
@@ -52,7 +60,10 @@ import { AuthInterceptor } from './services/http-interceptors/auth-interceptor';
     MatInputModule,
     MatDialogModule,
     MatDividerModule,
-    HttpClientModule
+    HttpClientModule,
+    MatIconModule,
+    MatTabsModule,
+    LayoutModule
   ],
   entryComponents: [NewChannelFormComponent],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],

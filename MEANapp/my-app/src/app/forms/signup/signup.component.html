@@ -1,19 +1,16 @@
 <div class='card-container'>
-  <mat-card style="text-align: center;">
+  <mat-card class="login-card">
     <mat-card-title>{{ confirmPassword ? 'Sign Up' : 'Log In' }} </mat-card-title>
     <mat-card-content>
       <form (ngSubmit)='handleForm()' #form='ngForm'>
         <mat-form-field>
           <input matInput
-            [(ngModel)]='username'
+            [(ngModel)]='email'
             required
             email
             name='email'>
             <mat-error>
               Please enter a valid e-mail address.
-            </mat-error>
-            <mat-error *ngIf='this.emailTaken'>
-              A user with this email address already exists!
             </mat-error>
         </mat-form-field>
         <br/>
@@ -36,14 +33,27 @@
           </mat-error>
         </mat-form-field>
         <br/>
-        <button mat-raised-button color='primary' class='left-button' [disabled]='!form.valid'>
-          {{ confirmPassword ? 'Sign Up' : 'Log In' }}</button>
-        <br/>
-        <button mat-raised-button color='primary' class='right-button' type='button'
-        (click)='this.confirmPassword = !this.confirmPassword'>
-        Switch to {{ confirmPassword ? 'Log in' : 'Sign up'}}</button>
+        <div *ngIf='loading' class="lds-ring"><div></div><div></div><div></div><div></div></div>
+        <div class='login__controls'>
+          <button *ngIf='!loading'
+            mat-raised-button
+            color='primary'
+            class='login__control'
+            [disabled]='!form.valid'>
+            {{ confirmPassword ? 'Sign Up' : 'Log In' }}
+          </button>
+          <button *ngIf='!loading'
+          mat-raised-button
+          color='primary'
+          class='login__control'
+          type='button'
+          (click)='this.confirmPassword = !this.confirmPassword; this.error = undefined'>
+          Switch to {{ confirmPassword ? 'Log in' : 'Sign up'}}
+          </button>
+      </div>
       </form>
     </mat-card-content>
+    <div id='error-container' *ngIf='error'><p id='error'>{{error}}</p></div>
   </mat-card>
   <br/>
 </div>

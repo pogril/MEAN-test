@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Channel } from '../feeds/channel.model';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
@@ -7,6 +7,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NewChannelFormComponent } from '../forms/new-channel/new-channel.component';
 import { Subscription } from 'rxjs';
 import { ChannelComponent } from '../feeds/channel/channel.component';
+import {
+  BreakpointObserver,
+  Breakpoints,
+  BreakpointState
+} from '@angular/cdk/layout';
+import { UiHelperService } from '../services/uiHelperService';
 
 @Component({
   selector: 'app-home',
@@ -17,15 +23,21 @@ import { ChannelComponent } from '../feeds/channel/channel.component';
 export class HomeComponent implements OnInit, OnDestroy {
 
   signIn: Boolean;
+  isMobile: Boolean = false;
   channels: Channel[];
+  uiSub: Subscription;
   currentUser: Subscription;
   channelRef: ChannelComponent;
+  showSidebar: Boolean = true;
+  @ViewChild('backdrop') backdrop: ElementRef;
 
   constructor(
+    private breakpointObs: BreakpointObserver,
     private route : ActivatedRoute,
     private dlg : MatDialog,
     private http: HttpClient,
     private auth: AuthService,
+    public ui: UiHelperService,
     private router: Router
     ) { }
 
@@ -47,7 +59,10 @@ export class HomeComponent implements OnInit, OnDestroy {
             name: result.name,
             id: result.id
           }
-          this.channels.push(createdChannel);
+          let user = this.auth.currentUser.value;
+          user.channels.push(createdChannel);
+          this.auth.saveUserData(user as User);
+          this.auth.currentUser.next(user as User);
         })
     })
   }
@@ -57,7 +72,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.channelRef.unload();
     }
     this.router.navigate([`./channels/${channel}`], {relativeTo: this.route})
-      .then(res => {this.channelRef.getMessages()});
+      .then(res => {
+        this.channelRef.getMessages();
+        if(this.isMobile){
+          this.ui.toggleSideNav();
+        }
+      });
+
   }
 
   getOptions() {
@@ -72,10 +93,26 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+
+    this.channels = this.auth.currentUser.value.channels;
     this.currentUser = this.auth.currentUser.subscribe( (user: User) => {
       this.channels = user.channels;
     });
 
+    if(this.breakpointObs.isMatched('(max-width: 40rem)')){
+      this.showSidebar = false;
+      this.isMobile = true;
+    };
+
+    this.uiSub = this.ui.sideNav.subscribe(e => {
+      this.showSidebar = !this.showSidebar;
+      if(this.showSidebar) {
+        this.backdrop.nativeElement.style.display = 'block';
+      }
+      else {
+        this.backdrop.nativeElement.style.display = 'none';
+      }
+    })
   }
 
   ngOnDestroy() {

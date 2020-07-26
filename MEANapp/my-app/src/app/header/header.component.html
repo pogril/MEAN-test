@@ -1,11 +1,17 @@
 <mat-toolbar>
+  <div class='menu-icon-container'>
+    <button mat-icon-button (click)='toggleNav()'>
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+  <div id='avatar-container'><img id='avatar' [src]='this.auth.currentUser.value.sprite'></div>
   <button mat-button [matMenuTriggerFor]='appMenu' class='menu-button'>Menu</button>
   <span class='filler'></span>
   <button mat-button class='logout-button' (click)='logout()'>Logout</button>
 </mat-toolbar>
 
 <mat-menu #appMenu='matMenu'>
-  <button mat-menu-item>Option 1</button>
+  <button mat-menu-item (click)='navInbox()'>Inbox</button>
   <button mat-menu-item>Option 2</button>
 </mat-menu>
 

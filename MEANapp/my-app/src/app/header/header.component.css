@@ -1,3 +1,20 @@
 .filler {
   flex: 1 1 auto ;
 }
+
+#avatar-container {
+  height: 3rem;
+  width: 3rem;
+}
+
+#avatar {
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+}
+
+@media (min-width: 40rem){
+  .menu-icon-container{
+    display: none;
+  }
+}

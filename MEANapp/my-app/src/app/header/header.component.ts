@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LogoutService } from '../services/logoutService';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/authService';
+import { UiHelperService } from '../services/uiHelperService';
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,8 @@ export class HeaderComponent implements OnInit {
   constructor(
     private l: LogoutService,
     private router: Router,
-    private auth: AuthService
+    public auth: AuthService,
+    public ui: UiHelperService
   ) { }
 
   logout() {
@@ -23,7 +25,16 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  toggleNav(){
+    this.ui.toggleSideNav();
+  }
+
+  navInbox() {
+    this.router.navigate(['/inbox']);
+  }
+
   ngOnInit() {
+
   }
 
 }

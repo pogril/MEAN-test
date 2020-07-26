@@ -7,6 +7,10 @@ const Message = new Schema({
         type: String,
         required: true
     },
+    sprite: {
+        type: String,
+        required: true
+    },
     content: {
         type: String,
         required: true

@@ -3,7 +3,12 @@ const Schema = mongoose.Schema;
 
 const User = new Schema({
 
-    name: {
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    localName: {
         type: String,
         required: true,
         unique: true
@@ -22,6 +27,15 @@ const User = new Schema({
         type: Number
     },
     channels: {
+        type: Array
+    },
+    friends: {
+        type: Array
+    },
+    conversations: {
+        type: Array
+    },
+    blockedList: {
         type: Array
     }
 });

@@ -39,11 +39,11 @@ export class MsgService {
 
   postMessage(chanId: string, message: Message) {
     message.content = this.parse(message.content);
-    console.log(message.content);
     this.http.post(`http://localhost:3000/channels/${chanId}`,
       {author: message.author, content: message.content})
-      .subscribe((response: {id: string, createdAt: Date, updatedAt: Date}) => {
+      .subscribe((response: {id: string, createdAt: Date, updatedAt: Date, sprite: string}) => {
         message.id = response.id;
+        message.sprite = response.sprite;
         message.createdAt = response.createdAt;
         message.updatedAt = response.updatedAt;
         this.activeChanSub.next(message);

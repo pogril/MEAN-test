@@ -9,21 +9,16 @@ const SECRET = 'To_wage_through_force_or_guile_eternal_war_irreconcilable_to_our
 
 exports.getMessages = (req, res, next) => {
 
-    async function gatherMessages(channel) {
+    function gatherMessages(channel) {
 
-        const output = [];
+        let output = [];
 
-        for(msg of channel.messages){
-           await Message.findOne({_id: msg._id})
-            .then(m => {
-                output.push({
-                    author: m.author, 
-                    content: m.content, 
-                    id: m._id,
-                    createdAt: m.createdAt,
-                    updatedAt: m.updatedAt
-                });
-            })
+        if(channel.messages.length < 20) {
+            output = channel.messages;  
+        } else {
+            for(let i = channel.messages.length - 20; i < channel.messages.length; i++){
+                output.push(channel.messages[i]);
+            }
         }
 
         return output;
@@ -31,31 +26,59 @@ exports.getMessages = (req, res, next) => {
 
     Channel.findOne({_id: req.params.id})
         .then(channel => {
-            gatherMessages(channel)
-                .then(result => {
-                    res.status(200).json({messages: result});
-            });
+            const messages = gatherMessages(channel);
+            res.status(200).json({length: channel.messages.length, messages: messages});
+        
     })
+}
+
+exports.loadMore = (req, res, next) => {
+
+    let output = [];
+
+    Channel.findOne({_id: req.params.id})
+        .then(channel => {
+            console.log(req.query.loaded);
+            console.log(channel.messages.length);
+            let n = channel.messages.length - req.query.loaded;
+            let messages = 
+                n >= 20 ? channel.messages.slice(n - 20, n) : channel.messages.slice(0, n);
+
+            // console.log(messages.length);
+            // console.log(messages);
+
+            for(let msg of messages){
+                output.push(msg);
+            }
+            // console.log(output);
+            res.status(200).json({messages: output});
+        })
 }
 
 exports.postMessage = (req, res, next) => {
 
     Channel.findOne({_id: req.params.id})
         .then(channel => {
-            const message = new Message({
-                author: req.body.author,
-                content: req.body.content
-            })
-            message.save()
-                .then(msg => {
-                    channel.messages.push(msg);
-                    channel.save();
-                    res.status(201).json({
-                        id: msg._id, 
-                        createdAt: msg.createdAt,
-                        updatedAt: msg.updatedAt
-                    });
-            })
+            User.findOne({localName: req.body.author})
+                .then(user => {
+                    const message = new Message({
+                        author: user.localName,
+                        content: req.body.content,
+                        sprite: user.sprite
+                    })
+                    message.save()
+                        .then(msg => {
+                            channel.messages.push(msg);
+                            channel.save();
+                            res.status(201).json({
+                                id: msg._id, 
+                                sprite: user.sprite,
+                                createdAt: msg.createdAt,
+                                updatedAt: msg.updatedAt
+                            })
+                    })
+                })
+            
         })
     
 }

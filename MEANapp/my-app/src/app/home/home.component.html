@@ -1,6 +1,6 @@
 <app-header></app-header>
 <mat-sidenav-container class='tgt2'>
-  <mat-sidenav #sidenav mode='side' class='tgt' opened>
+  <mat-sidenav #sidenav mode='side' class='tgt' [opened]='showSidebar'>
     <button mat-menu-item (click)='loadFeed()'>My Feed</button>
     <mat-divider></mat-divider>
     <button mat-menu-item (click)='newChannel()' (contextmenu)='getOptions()'> +  New Channel</button>
@@ -11,6 +11,7 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
+    <div #backdrop class='backdrop' (click)='ui.toggleSideNav()'></div>
     <router-outlet (activate)='getRef($event)'></router-outlet>
   </mat-sidenav-content>
 

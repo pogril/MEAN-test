@@ -1,0 +1,55 @@
+<body class='mat-app-background'>
+  <mat-tab-group #nav
+    class='setup-container'
+    dynamicHeight='true'
+    mat-align-tabs='center'>
+    <form [formGroup]='form'>
+      <mat-tab label='Step One'>
+        <mat-card class='tab-contents'>
+          <mat-card-title>Choose a username:</mat-card-title>
+          <mat-card-content>
+              <mat-form-field>
+                <input matInput
+                  formControlName='localname'
+                  [errorStateMatcher]='matcher'>
+                <mat-error>Username unavailable</mat-error>
+              </mat-form-field>
+            <button mat-button color='primary'
+            type='button'
+            (click)='nav.selectedIndex = 1; tab1.disabled = false;'
+            [disabled]='!validUsername'>Next</button>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+      <mat-tab #tab1 label='Step Two' disabled='true'>
+        <mat-card class='tab-contents'>
+          <mat-card-title>Upload a picture:</mat-card-title>
+          <mat-card-content>
+            <button mat-button color='primary' (click)='fileUpload.click()'>Upload</button>
+            <input matInput
+              formControlName='sprite'>
+            <input id='picker'
+            type='file'
+            #fileUpload
+            (change)='onImagePicked($event)'>
+            <div id='avatar-container'>
+              <img id='avatar' [src]='image'>
+            </div>
+            <br/>
+            <br/>
+            <button mat-button type='button' (click)='submit()'>Next</button>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+      <mat-tab #tab2 label='Step Three' disabled='true'>
+        <mat-card class='tab-contents'>
+          <mat-card-title>Choose default behavior:</mat-card-title>
+          <mat-card-content>
+            <input matInput
+              formControlName='motto'>
+          </mat-card-content>
+        </mat-card>
+      </mat-tab>
+    </form>
+  </mat-tab-group>
+</body>

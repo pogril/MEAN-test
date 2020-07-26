@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Channel } from '../feeds/channel.model';
-import { Subject, BehaviorSubject, pipe } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { LogoutService } from './logoutService';
+import { ErrorService } from './errorService';
 
 export class User {
 
@@ -34,18 +35,47 @@ export class AuthService{
   constructor(
     private router: Router,
     private http: HttpClient,
+    private es: ErrorService,
     private l: LogoutService
     ) {}
 
+  private newUserCredentials: {email: String, password: String};
+  private configuredNewUser: User;
   currentUser = new BehaviorSubject<User>(null);
 
   login(email: string, password: string) {
 
     this.http.post('http://localhost:3000/login', {
-      username: email,
-      password: password
+    email: email,
+    password: password
     }).subscribe( (user: any) => {
-      this.currentUser.next(user);
+      this.currentUser.next(new User(
+        user.name,
+        user.userID,
+        user.channels,
+        user.sprite,
+        user.motto,
+        user._token,
+        user.authUntil
+      ));
+      this.saveUserData(this.currentUser.value);
+      this.autoLogout();
+      this.router.navigate(['home']);
+    }, error => {
+      this.es.push(error.error.error);
+    });
+  }
+
+  signup(localname: string, avatar: File) {
+    const formData = new FormData();
+
+    formData.append('localname', localname);
+    formData.append('image', avatar);
+    formData.append('email', this.newUserCredentials.email as string);
+    formData.append('password', this.newUserCredentials.password as string);
+
+    this.http.post('http://localhost:3000/signup', formData)
+    .subscribe( (user: any) => {
       this.currentUser.next(new User(
         user.name,
         user.userID,
@@ -61,25 +91,12 @@ export class AuthService{
     });
   }
 
-  signup(email: string, password: string) {
-    this.http.post('http://localhost:3000/signup', {
-      username: email,
-      password: password
-    }).subscribe( (user: any) => {
-      this.currentUser.next(user);
-      this.currentUser.next(new User(
-        user.name,
-        user.userID,
-        user.channels,
-        user.sprite,
-        user.motto,
-        user._token,
-        user.authUntil
-      ));
-      this.saveUserData(this.currentUser.value);
-      this.autoLogout();
-      this.router.navigate(['home']);
-    });
+  prepareNewUser(email: string, password: string) {
+    this.newUserCredentials = {email: email, password: password};
+  }
+
+  configureNewUser(sprite?: File, motto?: String, options?: {}) {
+
   }
 
   saveUserData(user: User) {

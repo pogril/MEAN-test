@@ -1,0 +1,19 @@
+<app-header></app-header>
+<mat-sidenav-container class='tgt2'>
+  <mat-sidenav #sidenav mode='side' class='tgt' [opened]='showSidebar'>
+        <div class ='conversation__container'
+          *ngFor='let conversation of conversations'
+          matRipple
+          >
+          <img [ngStyle]="{'background-image': 'url(' + conversation.image + ')'}" class='sprite'>
+          <p>{{conversation.name}}</p>
+        </div>
+        <mat-divider *ngFor='let c of conversations'></mat-divider>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div #backdrop class='backdrop' (click)='ui.toggleSideNav()'></div>
+    <router-outlet (activate)='getRef($event)'></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

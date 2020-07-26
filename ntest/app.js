@@ -16,7 +16,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
-
+app.use('/images', express.static( path.join(__dirname, 'public', 'images') ));
 app.use(routes);
 
 mongoose.connect('mongodb+srv://admin:cSu1uSrUcEfwm4H3@sandbox-r1nxa.mongodb.net/test?retryWrites=true&w=majority')

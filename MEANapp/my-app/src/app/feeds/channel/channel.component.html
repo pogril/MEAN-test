@@ -1,8 +1,12 @@
-<div #msgContainer class='messages-container'>
+<div
+  #msgContainer
+  class='messages-container'
+  (scroll)='onScroll($event)'>
   <div *ngIf='loaded'>
     <app-message *ngFor='let message of messages'
     [content]='message.content'
     [author]='message.author'
+    [image]='message.sprite'
     >
   </app-message>
   </div>
